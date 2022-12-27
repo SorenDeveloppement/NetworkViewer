@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.zip.DataFormatException;
 
 public class IpInfo {
 
