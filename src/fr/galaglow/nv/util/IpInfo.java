@@ -12,7 +12,7 @@ import java.util.concurrent.*;
 public class IpInfo {
 
     protected static List<String> ips = new ArrayList<String>();
-    public InetAddress localHost;
+    public static InetAddress localHost;
 
     {
         try {
@@ -44,7 +44,7 @@ public class IpInfo {
         }
     }
 
-    public String getLocalMachineInfoByIp(InetAddress localHost, byte host0, byte host1) {
+    public String[] getLocalMachineInfoByIp(InetAddress localHost, byte host0, byte host1) {
         try {
 
             byte[] ip = localHost.getAddress();
@@ -57,7 +57,7 @@ public class IpInfo {
                 String output = address.toString().substring(1);
                 // System.out.println(address.getHostName() + " : " + output);
 
-                return Arrays.toString(new String[]{output, address.getHostName()});
+                return new String[]{output, address.getHostName()};
             } else {
                 System.out.println("Aucune machine n'a été trouvée");
             }
@@ -93,8 +93,8 @@ public class IpInfo {
     }
 
     public List<String> getConnectedLocalIps() {
+        final ExecutorService es = Executors.newCachedThreadPool();
         try {
-            final ExecutorService es = Executors.newCachedThreadPool();
             List<Future<ScanResult>> ipsc = new ArrayList<>();
             InetAddress localhost = InetAddress.getLocalHost();
             byte[] ip = localhost.getAddress();
@@ -107,11 +107,11 @@ public class IpInfo {
                     ips.add(ip_.get().getIp());
                 }
             }
-            es.shutdownNow();
         } catch (UnknownHostException | ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
 
+        es.shutdown();
         return ips;
     }
 
