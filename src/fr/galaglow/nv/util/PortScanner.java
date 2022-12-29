@@ -4,24 +4,22 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+@SuppressWarnings("unused")
 public class PortScanner {
 
     List<Integer> ports = new ArrayList<>();
 
     public List<Integer> scanPort(final String ipAddress, final int timeOut) throws InterruptedException, ExecutionException {
         final ExecutorService es = Executors.newCachedThreadPool();
-        final String ip = ipAddress;
-        final int timeout = timeOut;
         final List<Future<ScanResult>> futures = new ArrayList<>();
         for (int port = 1; port <= 65535; port++) {
             // for (int port = 1; port <= 80; port++) {
-            futures.add(portIsOpen(es, ip, port, timeout));
+            futures.add(portIsOpen(es, ipAddress, port, timeOut));
         }
         for (final Future<ScanResult> f : futures) {
             if (f.get().isOpen()) {
@@ -35,17 +33,14 @@ public class PortScanner {
 
 
     public static Future<ScanResult> portIsOpen(final ExecutorService es, final String ip, final int port, final int timeout) {
-        return es.submit(new Callable<ScanResult>() {
-            @Override
-            public ScanResult call() {
-                try {
-                    Socket socket = new Socket();
-                    socket.connect(new InetSocketAddress(ip, port), timeout);
-                    socket.close();
-                    return new ScanResult(port, true);
-                } catch (Exception ex) {
-                    return new ScanResult(port, false);
-                }
+        return es.submit(() -> {
+            try {
+                Socket socket = new Socket();
+                socket.connect(new InetSocketAddress(ip, port), timeout);
+                socket.close();
+                return new ScanResult(port, true);
+            } catch (Exception ex) {
+                return new ScanResult(port, false);
             }
         });
     }

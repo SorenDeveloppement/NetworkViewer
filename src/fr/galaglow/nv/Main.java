@@ -9,19 +9,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 
 public class Main extends JFrame implements ActionListener {
 
-    private JList<String> iplist = new JList<>();
-    private JScrollPane listIpScroller = new JScrollPane(iplist);
-    private JLabel ipHostName = new JLabel("No Ip Selected");
-    private JButton ipHostNameButton = new JButton("Get host name");
-    private JButton ipScanButton = new JButton("Start a local IP scan");
-    private JList<String> portlist = new JList<>();
-    private JScrollPane listPortScroller = new JScrollPane(portlist);
-    private JButton portScanButton = new JButton("Start a port scan");
+    private final JList<String> iplist = new JList<>();
+    private final JScrollPane listIpScroller = new JScrollPane(iplist);
+    private final JLabel ipHostName = new JLabel("No Ip Selected");
+    private final JButton ipHostNameButton = new JButton("Get host name");
+    private final JButton ipScanButton = new JButton("Start a local IP scan");
+    private final JList<String> portlist = new JList<>();
+    private final JScrollPane listPortScroller = new JScrollPane(portlist);
+    private final JButton portScanButton = new JButton("Start a port scan");
 
     public Main() {
         super("NetworkViewer");
@@ -90,10 +89,6 @@ public class Main extends JFrame implements ActionListener {
 
         listPortScroller.setPreferredSize(new Dimension(150, 200));
         portContent.add(listPortScroller);
-
-        /* // Seting up the ip text field for port scan
-        JTextField ipTextField = new JTextField("192.168.1.1");
-        boxLayout.add(ipTextField); */
 
         // Setting up the port scan button
         portScanButton.addActionListener(this);

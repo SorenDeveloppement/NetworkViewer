@@ -9,12 +9,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
 
+@SuppressWarnings("unused")
 public class IpInfo {
 
-    protected static List<String> ips = new ArrayList<String>();
+    protected static List<String> ips = new ArrayList<>();
     public static InetAddress localHost;
 
-    {
+    static {
         try {
             localHost = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
@@ -186,28 +187,25 @@ public class IpInfo {
     }
 
     public static Future<ScanResult> ipIsConnected(final ExecutorService es, byte network, byte underNetwork, byte host0, byte host1, final int timeout) {
-        return es.submit(new Callable<ScanResult>() {
-            @Override
-            public ScanResult call() {
-                byte[] ip = {network, underNetwork, host0, host1};
+        return es.submit(() -> {
+            byte[] ip = {network, underNetwork, host0, host1};
 
-                try {
+            try {
 
-                    InetAddress address = InetAddress.getByAddress(ip);
+                InetAddress address = InetAddress.getByAddress(ip);
 
-                    if (address.isReachable(timeout)) {
-                        String output = address.toString().substring(1);
-                        // System.out.println(address.getHostName() + " : " + output);
+                if (address.isReachable(timeout)) {
+                    String output = address.toString().substring(1);
+                    // System.out.println(address.getHostName() + " : " + output);
 
-                        ips.add(output);
-                        return new ScanResult(Arrays.toString(ip), true);
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    ips.add(output);
+                    return new ScanResult(Arrays.toString(ip), true);
                 }
-
-                return new ScanResult(Arrays.toString(ip), false);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+
+            return new ScanResult(Arrays.toString(ip), false);
         });
     }
 
