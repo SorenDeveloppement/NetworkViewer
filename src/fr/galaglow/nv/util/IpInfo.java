@@ -93,6 +93,7 @@ public class IpInfo {
     }
 
     public List<String> getConnectedLocalIps() {
+        ips.clear();
         final ExecutorService es = Executors.newCachedThreadPool();
         try {
             List<Future<ScanResult>> ipsc = new ArrayList<>();
