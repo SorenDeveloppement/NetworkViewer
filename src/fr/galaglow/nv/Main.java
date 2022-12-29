@@ -105,9 +105,9 @@ public class Main extends JFrame implements ActionListener {
             IpInfo ip = new IpInfo();
 
             List<String> ips = ip.getConnectedLocalIps();
-            String[] cIps = new String[ips.size()-1];
+            String[] cIps = new String[ips.size() - 1];
 
-            for (int i = 0; i < ips.size()-1; i++) {
+            for (int i = 0; i < ips.size() - 1; i++) {
                 cIps[i] = String.valueOf(ips.get(i));
             }
 
@@ -115,27 +115,31 @@ public class Main extends JFrame implements ActionListener {
 
         } else if (e.getSource() == ipHostNameButton) {
             try {
-                String ip = iplist.getSelectedValue();
-                String[] ipHosts = ip.split("\\.");
+                if (iplist.getSelectedValue() != null) {
+                    String ip = iplist.getSelectedValue();
+                    String[] ipHosts = ip.split("\\.");
 
-                String hostName = new IpInfo().getLocalMachineInfoByIp(IpInfo.localHost, Byte.parseByte(ipHosts[2]), Byte.parseByte(ipHosts[3]))[1];
+                    String hostName = new IpInfo().getLocalMachineInfoByIp(IpInfo.localHost, Byte.parseByte(ipHosts[2]), Byte.parseByte(ipHosts[3]))[1];
 
-                ipHostName.setText(hostName);
+                    ipHostName.setText(hostName);
+                }
             } catch (RuntimeException ex) {
                 ipHostName.setText("No name found");
             }
         } else if (e.getSource() == portScanButton) {
             try {
-                String ip = iplist.getSelectedValue();
+                if (iplist.getSelectedValue() != null) {
+                    String ip = iplist.getSelectedValue();
 
-                List<Integer> openedPorts = new PortScanner().scanPort(ip, 200);
-                String[] oPort = new String[openedPorts.size()-1];
+                    List<Integer> openedPorts = new PortScanner().scanPort(ip, 200);
+                    String[] oPort = new String[openedPorts.size() - 1];
 
-                for (int i = 0; i < openedPorts.size()-1; i++) {
-                    oPort[i] = String.valueOf(openedPorts.get(i));
+                    for (int i = 0; i < openedPorts.size() - 1; i++) {
+                        oPort[i] = String.valueOf(openedPorts.get(i));
+                    }
+
+                    portlist.setListData(oPort);
                 }
-
-                portlist.setListData(oPort);
             } catch (ExecutionException | InterruptedException ex) {
                 throw new RuntimeException(ex);
             }
