@@ -23,12 +23,14 @@ public class IpInfo {
         }
     }
 
-    public void getLocalIp() {
+    public InetAddress getLocalIp() {
         try {
             InetAddress ip = InetAddress.getLocalHost();
 
             System.out.print("IP address : ");
             System.out.println(ip.getHostAddress());
+
+            return ip;
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
@@ -208,6 +210,14 @@ public class IpInfo {
             return new ScanResult(Arrays.toString(ip), false);
         });
     }
+
+//    public byte[] getSubNetworkMask() {
+//        byte[] subNetworkMask = new byte[4];
+//
+//        subNetworkMask = getLocalIp().getHostAddress().getBytes();
+//
+//        return subNetworkMask;
+//    }
 
     public static class ScanResult {
         private String ip;
